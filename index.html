@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Đoàn Thành Trung — QA Portfolio</title>
+<meta name="description" content="Portfolio QA Engineer của Đoàn Thành Trung, trình bày theo phong cách một bản test-run report." />
+<meta name="theme-color" content="#050a07" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ground: #050a07;
+    --surface: #0c1410;
+    --surface-2: #101d16;
+    --ink: #eafff1;
+    --ink-soft: #9fd9ae;
+    --ink-faint: #567a61;
+    --accent: #22c55e;
+    --accent-2: #22d3ee;
+    --accent-ink: #051b10;
+    --pass: #22c55e;
+    --pass-bg: rgba(34, 197, 94, 0.12);
+    --pending: #eab308;
+    --pending-bg: rgba(234, 179, 8, 0.12);
+    --fail: #f43f5e;
+    --fail-bg: rgba(244, 63, 94, 0.12);
+    --line: #1c2b22;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px rgba(0, 0, 0, 0.55);
+    --glow: 0 0 1px rgba(34, 197, 94, 0.5), 0 0 10px rgba(34, 197, 94, 0.16);
+    --glow-soft: 0 0 8px rgba(34, 197, 94, 0.1);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { background: var(--ground); scroll-behavior: smooth; }
+  section[id] { scroll-margin-top: 66px; }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(34, 197, 94, 0.045), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 20%, rgba(34, 211, 238, 0.03), transparent 55%),
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.01) 0px, rgba(255, 255, 255, 0.01) 1px, transparent 1px, transparent 3px),
+      var(--ground);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+
+  @keyframes blink-cursor {
+    0%, 45% { opacity: 1; }
+    50%, 95% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+    70% { box-shadow: 0 0 0 5px transparent; opacity: 0.7; }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200px 0; }
+    100% { background-position: 200px 0; }
+  }
+
+  .mono {
+    font-family: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- scroll progress ---------- */
+  #scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.45);
+    z-index: 50;
+  }
+
+  /* ---------- side quick-nav ---------- */
+  .side-nav {
+    position: fixed;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .side-nav a {
+    position: relative;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .side-nav a:hover { transform: scale(1.3); border-color: var(--accent); }
+  .side-nav a.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+    transform: scale(1.3);
+  }
+  .side-nav a::after {
+    content: attr(data-label);
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 3px 8px;
+    border-radius: 6px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+  .side-nav a:hover::after { opacity: 1; }
+  @media (max-width: 980px) {
+    .side-nav { display: none; }
+  }
+
+  /* ---------- top run bar ---------- */
+  .runbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .runbar-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+  }
+  .runbar .path { color: var(--ink-faint); }
+  .runbar .repo { color: var(--ink); font-weight: 600; }
+  .runbar .sep { color: var(--ink-faint); }
+  .runbar-spacer { flex: 1; }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px 3px 7px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .status-pill.pass { background: var(--pass-bg); color: var(--pass); border: 1px solid color-mix(in srgb, var(--pass) 35%, transparent); }
+  .status-pill.pending { background: var(--pending-bg); color: var(--pending); border: 1px solid color-mix(in srgb, var(--pending) 35%, transparent); }
+  .status-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 3px currentColor; animation: pulse-dot 1.8s ease-in-out infinite; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    padding: 76px 0 48px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 28px;
+  }
+  .hero-text { flex: 1; min-width: 0; }
+  .avatar-frame {
+    flex-shrink: 0;
+    position: relative;
+    width: 128px;
+    height: 128px;
+    border-radius: 20px;
+    padding: 3px;
+    background: linear-gradient(145deg, var(--accent), var(--accent-2));
+    box-shadow: var(--glow), var(--shadow);
+  }
+  .avatar-frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 17px;
+    background: var(--surface);
+  }
+  .avatar-frame .online {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--pass);
+    border: 3px solid var(--ground);
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.5);
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+  .hero .kicker {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-top: 14px;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--ink) 30%, var(--accent) 80%, var(--accent-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.14));
+  }
+  .hero h1::after {
+    content: "▍";
+    -webkit-text-fill-color: var(--accent);
+    color: var(--accent);
+    animation: blink-cursor 1.1s steps(1) infinite;
+    text-shadow: 0 0 5px var(--accent);
+  }
+  .hero .role {
+    margin-top: 18px;
+    font-size: 15px;
+    color: var(--accent);
+    text-shadow: 0 0 6px rgba(34, 197, 94, 0.2);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .hero .role .key { color: var(--ink-faint); }
+  .hero .role .typed::after {
+    content: "▍";
+    color: var(--accent);
+    animation: blink-cursor 1.1s steps(1) infinite;
+    margin-left: 1px;
+  }
+  .hero p.thesis {
+    max-width: 58ch;
+    margin: 22px 0 0;
+    font-size: 16.5px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+  .hero .contact-row {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .contact-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px;
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    font-size: 13.5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .contact-chip:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: var(--glow-soft); }
+  .contact-chip.primary {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: var(--accent);
+    font-weight: 700;
+    box-shadow: var(--glow);
+  }
+  .contact-chip.primary:hover { box-shadow: 0 0 1px rgba(34,197,94,0.6), 0 0 14px rgba(34,197,94,0.25); }
+
+  .hero-stats {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .hero-stats div {
+    padding: 16px 14px;
+    border-right: 1px solid var(--line);
+    transition: background 0.2s ease;
+  }
+  .hero-stats div:hover { background: var(--surface-2); }
+  .hero-stats div:last-child { border-right: none; }
+  .hero-stats .num {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 0 8px rgba(34, 197, 94, 0.22);
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-stats .label {
+    margin-top: 4px;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- suite sections ---------- */
+  .suite {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .suite-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .suite-head .call {
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+  .suite-head .name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .suite-head .status-pill { margin-left: auto; }
+
+  .suite > .prose {
+    max-width: 62ch;
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+  }
+  .suite > .prose + .prose { margin-top: 14px; }
+
+  /* ---------- skills / assertions ---------- */
+  .assertion-group + .assertion-group { margin-top: 22px; }
+  .assertion-group .g-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13.5px;
+    margin-bottom: 9px;
+  }
+  .assertion-group .g-title { font-weight: 600; color: var(--ink); }
+  .assertion-group .g-pct {
+    font-family: "JetBrains Mono", monospace;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .bar-track {
+    height: 7px;
+    border-radius: 4px;
+    background: var(--surface-2);
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--pass), var(--accent-2));
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.3);
+    background-image:
+      linear-gradient(90deg, var(--pass), var(--accent-2)),
+      linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    background-size: 100% 100%, 60px 100%;
+    background-repeat: no-repeat, no-repeat;
+    animation: shimmer 3.4s linear infinite;
+    transition: width 1.1s cubic-bezier(0.16, 0.8, 0.3, 1);
+  }
+  .bar-fill.pending { background: var(--pending); box-shadow: 0 0 5px rgba(234, 179, 8, 0.3); background-image: none; animation: none; }
+  .tag-row {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .tag {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    padding: 4px 9px;
+    border-radius: 6px;
+    background: var(--surface-2);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .tag:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ---------- run history / experience ---------- */
+  .commit {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 18px;
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+  }
+  .commit:first-of-type { border-top: none; padding-top: 0; }
+  .commit .when {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-faint);
+    padding-top: 3px;
+  }
+  .commit .role-line {
+    font-weight: 600;
+    font-size: 15.5px;
+  }
+  .commit .role-line .at { color: var(--ink-faint); font-weight: 400; }
+  .commit ul {
+    margin: 10px 0 0;
+    padding-left: 0;
+    list-style: none;
+    display: grid;
+    gap: 7px;
+  }
+  .commit li {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    padding-left: 20px;
+    position: relative;
+  }
+  .commit li::before {
+    content: "+";
+    position: absolute;
+    left: 0;
+    font-family: "JetBrains Mono", monospace;
+    color: var(--pass);
+    text-shadow: 0 0 4px rgba(34, 197, 94, 0.35);
+    font-weight: 700;
+  }
+
+  /* ---------- test-case cards ---------- */
+  .case {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    padding: 22px 24px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .case:hover {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    box-shadow: var(--shadow), var(--glow-soft);
+    transform: translateY(-2px);
+  }
+  .case + .case { margin-top: 16px; }
+  .case-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .case-head .tc-id {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11.5px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .case-head h3 {
+    font-size: 16.5px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .case-grid {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .case-grid .step-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    margin-bottom: 5px;
+  }
+  .case-grid p {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  .case-impact {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+    font-size: 13.5px;
+    color: var(--ink);
+  }
+  .case-impact b { color: var(--pass); font-family: "JetBrains Mono", monospace; }
+
+  /* ---------- certifications ---------- */
+  .cert-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .cert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13.5px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .cert:hover {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    box-shadow: var(--glow-soft);
+    transform: translateY(-2px);
+  }
+  .cert .cert-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--pass-bg);
+    color: var(--pass);
+    text-shadow: 0 0 3px currentColor;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pass) 40%, transparent);
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .cert .cert-name { font-weight: 600; }
+  .cert .cert-meta { color: var(--ink-faint); font-size: 12px; }
+
+  /* ---------- teardown / footer ---------- */
+  .teardown {
+    padding: 56px 0 80px;
+  }
+  .terminal {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow), 0 0 24px rgba(34, 197, 94, 0.035);
+  }
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .terminal-bar span {
+    width: 9px; height: 9px; border-radius: 50%; background: var(--line);
+  }
+  .terminal-bar span:nth-child(1) { background: var(--fail); box-shadow: 0 0 3px var(--fail); }
+  .terminal-bar span:nth-child(2) { background: var(--pending); box-shadow: 0 0 3px var(--pending); }
+  .terminal-bar span:nth-child(3) { background: var(--pass); box-shadow: 0 0 3px var(--pass); }
+  .terminal-body {
+    padding: 22px 24px 26px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13.5px;
+    line-height: 1.9;
+  }
+  .terminal-body .prompt { color: var(--accent); text-shadow: 0 0 4px rgba(34, 197, 94, 0.3); }
+  .terminal-body .comment { color: var(--ink-faint); }
+  .terminal-body a { text-decoration: none; border-bottom: 1px solid var(--line); }
+  .terminal-body a:hover { border-color: var(--accent); color: var(--accent); text-shadow: 0 0 4px rgba(34, 197, 94, 0.3); }
+  .terminal-body .out { color: var(--ink-soft); }
+  .terminal-body .cursor {
+    color: var(--accent);
+    text-shadow: 0 0 4px rgba(34, 197, 94, 0.35);
+    animation: blink-cursor 1.1s steps(1) infinite;
+    margin-left: 2px;
+  }
+  .term-line.pending {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .term-line.pending.visible { opacity: 1; transform: none; }
+
+  footer.credit {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 620px) {
+    .hero-top { flex-direction: column-reverse; }
+    .avatar-frame { width: 96px; height: 96px; }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    .hero-stats div:nth-child(2) { border-right: none; }
+    .case-grid { grid-template-columns: 1fr; }
+    .commit { grid-template-columns: 1fr; gap: 6px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+    html { scroll-behavior: auto !important; }
+  }
+
+  /* ---------- scroll-in slide animation ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s cubic-bezier(0.16, 0.8, 0.3, 1), transform 0.7s cubic-bezier(0.16, 0.8, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.from-left,
+  .reveal.from-right {
+    transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.from-left { transform: translateX(-46px); }
+  .reveal.from-right { transform: translateX(46px); }
+  .reveal.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<div id="scroll-progress"></div>
+
+<nav class="side-nav" aria-label="Điều hướng nhanh">
+  <a href="#hero" data-label="Giới thiệu"></a>
+  <a href="#about" data-label="Về tôi"></a>
+  <a href="#skills" data-label="Kỹ năng"></a>
+  <a href="#experience" data-label="Kinh nghiệm"></a>
+  <a href="#education" data-label="Học vấn"></a>
+  <a href="#projects" data-label="Dự án"></a>
+  <a href="#contact" data-label="Liên hệ"></a>
+</nav>
+
+<div class="runbar">
+  <div class="runbar-inner mono">
+    <span class="repo">doan-thanh-trung</span>
+    <span class="sep">/</span>
+    <span class="path">qa-portfolio</span>
+    <span class="runbar-spacer"></span>
+    <span class="status-pill pass"><span class="dot"></span>build passing</span>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <section class="hero" id="hero">
+    <div class="hero-top">
+      <div class="hero-text">
+        <p class="kicker mono">CAREER_RUN #07 · main branch</p>
+        <h1>Đoàn Thành Trung</h1>
+        <p class="role mono">
+          <span class="key">role:</span> "<span class="typed">QA Engineer → Senior Tester</span>"
+        </p>
+        <p class="thesis">
+          Tôi kiểm thử phần mềm từ đầu 2022 — bắt đầu với kiểm thử thủ công và API tại Mona Software, hiện là
+          QA Engineer tại IDT Inc, đào sâu kiểm thử ở tầng cơ sở dữ liệu (PostgreSQL) cho các hệ thống doanh
+          nghiệp thực tế: quản lý bệnh viện thú y, chuỗi cung ứng và chuỗi nhà thuốc. Mục tiêu năm tới: trở
+          thành Senior Tester, tập trung phát triển Performance Testing và Automation Testing.
+        </p>
+        <div class="contact-row">
+          <a class="contact-chip primary" href="mailto:doanthanhtrung38@gmail.com">✉ doanthanhtrung38@gmail.com</a>
+          <a class="contact-chip" href="tel:0343801225">📞 0343 801 225</a>
+          <a class="contact-chip" href="#" target="_blank" rel="noopener">in LinkedIn</a>
+          <a class="contact-chip" href="#" target="_blank" rel="noopener">⌥ GitHub</a>
+          <a class="contact-chip" href="Doan-Thanh-Trung-CV.pdf" target="_blank" rel="noopener">⬇ Tải CV (PDF)</a>
+        </div>
+      </div>
+
+      <div class="avatar-frame">
+        <img src="avatar.jpg" alt="Ảnh chân dung Đoàn Thành Trung" />
+        <span class="online"></span>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div><div class="num" data-value="4" data-suffix="+">4+</div><div class="label">NĂM KINH NGHIỆM QA</div></div>
+      <div><div class="num" data-value="4" data-suffix="">4</div><div class="label">DỰ ÁN LỚN ĐANG THAM GIA</div></div>
+      <div><div class="num" data-value="4" data-suffix="">4</div><div class="label">CÔNG CỤ KIỂM THỬ THÀNH THẠO</div></div>
+      <div><div class="num" data-value="565" data-suffix="">565</div><div class="label">ĐIỂM TOEIC</div></div>
+    </div>
+  </section>
+
+  <section class="suite" id="about">
+    <div class="suite-head">
+      <span class="call mono">describe(</span><span class="name mono">'Về tôi'</span><span class="call mono">)</span>
+      <span class="status-pill pass"><span class="dot"></span>3 passed</span>
+    </div>
+    <p class="prose">
+      Tốt nghiệp Điện tử Viễn thông tại Học viện Công nghệ Bưu chính Viễn thông (PTIT), tôi bắt đầu sự nghiệp
+      QA từ đầu 2022 tại Mona Software — kiểm thử API bằng Postman, truy vấn và kiểm tra dữ liệu với SQL
+      Server, làm việc trực tiếp với đội phát triển để làm rõ yêu cầu nghiệp vụ theo mô hình Agile.
+    </p>
+    <p class="prose">
+      Từ 04/2024, tôi chuyển sang IDT Inc với vai trò QA Engineer, đào sâu kiểm thử ở tầng cơ sở dữ liệu
+      PostgreSQL — logic nghiệp vụ, tính toàn vẹn dữ liệu, trigger, constraint. Hiện tôi tham gia đồng thời 4
+      dự án lớn: là QA chính (đầu mối kiểm thử duy nhất) cho một hệ thống fintech nội bộ, bên cạnh đó tham gia
+      hệ thống quản lý bệnh viện thú y, phần mềm quản lý chuỗi cung ứng Long Hải, và ứng dụng quản lý nhà
+      thuốc Pharmago (đạt giải Sao Khuê 2025).
+    </p>
+    <p class="prose">
+      Mục tiêu của tôi trong năm tới là trở thành Senior Tester — củng cố nền tảng manual và API testing đã
+      có, đồng thời phát triển thêm Performance Testing và Automation Testing.
+    </p>
+  </section>
+
+  <section class="suite" id="skills">
+    <div class="suite-head">
+      <span class="call mono">describe(</span><span class="name mono">'Assertions — Kỹ năng'</span><span class="call mono">)</span>
+      <span class="status-pill pending"><span class="dot"></span>1 in progress</span>
+    </div>
+
+    <div class="assertion-group">
+      <div class="g-head"><span class="g-title">Kiểm thử thủ công &amp; thiết kế test case</span><span class="g-pct">90%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:90%" data-pct="90"></div></div>
+      <div class="tag-row">
+        <span class="tag">Test case design</span>
+        <span class="tag">Test plan / checklist</span>
+        <span class="tag">Agile - Scrum</span>
+        <span class="tag">Bug tracking</span>
+        <span class="tag">Fintech domain testing</span>
+      </div>
+    </div>
+
+    <div class="assertion-group">
+      <div class="g-head"><span class="g-title">Cơ sở dữ liệu</span><span class="g-pct">85%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:85%" data-pct="85"></div></div>
+      <div class="tag-row">
+        <span class="tag">SQL Server</span>
+        <span class="tag">PostgreSQL</span>
+        <span class="tag">pgAdmin</span>
+        <span class="tag">Trigger / Constraint</span>
+      </div>
+    </div>
+
+    <div class="assertion-group">
+      <div class="g-head"><span class="g-title">API testing</span><span class="g-pct">80%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:80%" data-pct="80"></div></div>
+      <div class="tag-row">
+        <span class="tag">Postman</span>
+        <span class="tag">Swagger</span>
+        <span class="tag">Auto collection</span>
+      </div>
+    </div>
+
+    <div class="assertion-group">
+      <div class="g-head"><span class="g-title">Quy trình &amp; công cụ</span><span class="g-pct">85%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:85%" data-pct="85"></div></div>
+      <div class="tag-row">
+        <span class="tag">Jira</span>
+        <span class="tag">Google Sheets</span>
+        <span class="tag">HTML/CSS cơ bản</span>
+        <span class="tag">Tiếng Anh kỹ thuật</span>
+      </div>
+    </div>
+
+    <div class="assertion-group">
+      <div class="g-head"><span class="g-title">Performance &amp; Automation Testing</span><span class="g-pct">40%</span></div>
+      <div class="bar-track"><div class="bar-fill pending" style="width:40%" data-pct="40"></div></div>
+      <div class="tag-row">
+        <span class="tag">JMeter</span>
+        <span class="tag">Automation Testing</span>
+        <span class="tag">Đang phát triển</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="suite" id="experience">
+    <div class="suite-head">
+      <span class="call mono">describe(</span><span class="name mono">'Run history — Kinh nghiệm'</span><span class="call mono">)</span>
+      <span class="status-pill pass"><span class="dot"></span>2 passed</span>
+    </div>
+
+    <div class="commit">
+      <div class="when">04/2024 — nay</div>
+      <div>
+        <div class="role-line">QA Engineer <span class="at">@ Công ty Cổ phần Công nghệ IDT Inc</span></div>
+        <ul>
+          <li>Đảm nhiệm vai trò QA chính (đầu mối kiểm thử duy nhất) cho hệ thống fintech nội bộ của công ty — chủ động thiết kế toàn bộ quy trình test, không có QA thứ hai hỗ trợ.</li>
+          <li>Kiểm thử trực tiếp trên hệ cơ sở dữ liệu PostgreSQL: logic nghiệp vụ, tính toàn vẹn dữ liệu, trigger, constraint và hoạt động đọc/ghi dữ liệu; thao tác và xác thực qua pgAdmin.</li>
+          <li>Song song tham gia 3 dự án lớn khác: hệ thống quản lý bệnh viện thú y (HMS &amp; CRM), phần mềm quản lý chuỗi cung ứng Long Hải (SCM), và ứng dụng quản lý nhà thuốc Pharmago (đạt giải Sao Khuê 2025).</li>
+          <li>Thiết kế test case, test plan, checklist; kiểm thử API bằng Postman &amp; Swagger, phối hợp theo mô hình Agile-Scrum.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="commit">
+      <div class="when">01/2022 — 02/2024</div>
+      <div>
+        <div class="role-line">Nhân viên Kiểm thử <span class="at">@ Công ty Cổ phần Phần mềm Mona</span></div>
+        <ul>
+          <li>Làm việc trực tiếp với team phát triển để làm rõ yêu cầu nghiệp vụ và phản hồi từ khách hàng.</li>
+          <li>Thực hiện kiểm thử API bằng Postman và truy vấn, kiểm tra dữ liệu với SQL Server.</li>
+          <li>Ghi lỗi và theo dõi tiến độ xử lý bug qua Jira, phối hợp kiểm thử đa mô-đun theo mô hình Agile.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="suite" id="education">
+    <div class="suite-head">
+      <span class="call mono">describe(</span><span class="name mono">'Học vấn &amp; Chứng chỉ'</span><span class="call mono">)</span>
+      <span class="status-pill pass"><span class="dot"></span>2 passed</span>
+    </div>
+    <div class="cert-row">
+      <div class="cert">
+        <div class="cert-icon">✓</div>
+        <div>
+          <div class="cert-name">Cử nhân Điện tử Viễn thông — PTIT</div>
+          <div class="cert-meta">09/2018 – 01/2024 · Đã tốt nghiệp</div>
+        </div>
+      </div>
+      <div class="cert">
+        <div class="cert-icon">✓</div>
+        <div>
+          <div class="cert-name">TOEIC — 565 điểm</div>
+          <div class="cert-meta">12/2022 – 12/2024</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="suite" id="projects" style="border-bottom: none;">
+    <div class="suite-head">
+      <span class="call mono">describe(</span><span class="name mono">'Dự án nổi bật'</span><span class="call mono">)</span>
+      <span class="status-pill pending"><span class="dot"></span>4 active</span>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div>
+          <div class="tc-id">PRJ-01</div>
+          <h3>Hệ thống Fintech nội bộ</h3>
+        </div>
+        <span class="status-pill pass"><span class="dot"></span>QA chính</span>
+      </div>
+      <div class="case-grid">
+        <div><div class="step-label">Mô tả</div><p>Hệ thống fintech phục vụ nội bộ công ty, xử lý các luồng giao dịch và số liệu tài chính — đòi hỏi độ chính xác cao ở tầng dữ liệu.</p></div>
+        <div><div class="step-label">Trách nhiệm</div><p>Là QA duy nhất phụ trách dự án nên chủ động xây dựng toàn bộ quy trình kiểm thử: thiết kế test case cho các luồng giao dịch, đối soát số dư, kiểm tra tính toàn vẹn dữ liệu tài chính trên PostgreSQL (trigger, constraint, làm tròn số, giao dịch trùng).</p></div>
+        <div><div class="step-label">Công cụ</div><p>PostgreSQL &amp; pgAdmin, Postman &amp; Swagger (API giao dịch), Jira.</p></div>
+      </div>
+      <div class="case-impact">Vai trò: <b>QA chính (đầu mối duy nhất)</b> — chịu trách nhiệm toàn bộ quy trình kiểm thử dự án.</div>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div>
+          <div class="tc-id">PRJ-02</div>
+          <h3>Hệ thống quản lý bệnh viện thú y — App &amp; Web nội bộ (HMS &amp; CRM)</h3>
+        </div>
+        <span class="status-pill pending"><span class="dot"></span>đang triển khai</span>
+      </div>
+      <div class="case-grid">
+        <div><div class="step-label">Mô tả</div><p>App và Web nội bộ quản lý quy trình khám, chữa bệnh và vận hành cho chuỗi bệnh viện thú y lớn nhất Việt Nam, gồm Hospital Management System (HMS) và CRM quản lý khách hàng, thú cưng, lịch hẹn, đơn thuốc, thanh toán.</p></div>
+        <div><div class="step-label">Trách nhiệm</div><p>Nắm chắc quy trình khám bệnh (nội trú, ngoại trú, bác sĩ đến nhà); thiết kế test case chi tiết theo từng module, ghi lỗi theo mô hình Agile-Scrum.</p></div>
+        <div><div class="step-label">Công cụ</div><p>Postman (kiểm thử đấu nối dữ liệu theo auto collection), Google Sheets để ghi nhận lỗi.</p></div>
+      </div>
+      <div class="case-impact">Thời gian: <b>08/2025 – hiện nay</b></div>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div>
+          <div class="tc-id">PRJ-03</div>
+          <h3>Pharmago — Hệ thống quản lý nhà thuốc (Mobile App)</h3>
+        </div>
+        <span class="status-pill pending"><span class="dot"></span>đang triển khai</span>
+      </div>
+      <div class="case-grid">
+        <div><div class="step-label">Mô tả</div><p>Phần mềm quản lý chuỗi nhà thuốc: đơn thuốc, tồn kho, tá dược, dịch vụ, nhân sự và báo cáo — đạt giải thưởng Sao Khuê 2025.</p></div>
+        <div><div class="step-label">Trách nhiệm</div><p>Thiết kế test case, test design theo mô hình Agile-Scrum; kiểm thử các chức năng đơn thuốc, kho hàng, nhân viên, dịch vụ, báo cáo.</p></div>
+        <div><div class="step-label">Công cụ</div><p>Jira (bug tracking), Postman &amp; Swagger (API testing), pgAdmin4 (xác thực dữ liệu).</p></div>
+      </div>
+      <div class="case-impact">Thời gian: <b>08/2024 – hiện nay</b> · Giải thưởng: <b>Sao Khuê 2025</b></div>
+    </div>
+
+    <div class="case">
+      <div class="case-head">
+        <div>
+          <div class="tc-id">PRJ-04</div>
+          <h3>Long Hải — Hệ thống quản lý chuỗi cung ứng (SCM)</h3>
+        </div>
+        <span class="status-pill pending"><span class="dot"></span>đang triển khai</span>
+      </div>
+      <div class="case-grid">
+        <div><div class="step-label">Mô tả</div><p>Phần mềm quản lý chuỗi cung ứng gồm nhiều hệ thống con: nhà phân phối, kho, nhân viên thị trường, cửa hàng tạp hoá, thương mại điện tử, vận chuyển và chăm sóc khách hàng.</p></div>
+        <div><div class="step-label">Trách nhiệm</div><p>Thiết kế test case, checklist, test plan; kiểm thử thủ công và tự động hoá (Auto Test); kiểm thử dữ liệu trực tiếp trên Database và API.</p></div>
+        <div><div class="step-label">Công cụ</div><p>Jira, kiểm thử Database &amp; API.</p></div>
+      </div>
+      <div class="case-impact">Thời gian: <b>04/2024 – hiện nay</b></div>
+    </div>
+  </section>
+
+  <section class="teardown" id="contact">
+    <div class="terminal">
+      <div class="terminal-bar"><span></span><span></span><span></span></div>
+      <div class="terminal-body">
+        <div class="term-line"><span class="prompt">$</span> afterAll(() =&gt; teardown())</div>
+        <div class="term-line comment">// Sẵn sàng trao đổi cơ hội QA Engineer / Senior Tester</div>
+        <div class="term-line"><span class="prompt">$</span> echo $EMAIL</div>
+        <div class="term-line out"><a href="mailto:doanthanhtrung38@gmail.com">doanthanhtrung38@gmail.com</a></div>
+        <div class="term-line"><span class="prompt">$</span> echo $PHONE</div>
+        <div class="term-line out"><a href="tel:0343801225">0343 801 225</a></div>
+        <div class="term-line"><span class="prompt">$</span> echo $LOCATION</div>
+        <div class="term-line out">Hà Nội, Việt Nam</div>
+        <div class="term-line"><span class="prompt">$</span> echo $CV</div>
+        <div class="term-line out"><a href="Doan-Thanh-Trung-CV.pdf" target="_blank" rel="noopener">Doan-Thanh-Trung-CV.pdf</a><span class="cursor">▍</span></div>
+      </div>
+    </div>
+    <footer class="credit mono">// hồ sơ này được build như một bản test report — vì đó là cách tôi nhìn công việc của mình</footer>
+  </section>
+
+</main>
+
+<script>
+  // scroll progress bar
+  (function () {
+    var bar = document.getElementById("scroll-progress");
+    function update() {
+      var h = document.documentElement;
+      var scrolled = h.scrollTop;
+      var max = h.scrollHeight - h.clientHeight;
+      bar.style.width = (max > 0 ? (scrolled / max) * 100 : 0) + "%";
+    }
+    document.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    update();
+  })();
+
+  // side nav: highlight current section
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll(".side-nav a"));
+    if (!links.length) return;
+    var sections = links
+      .map(function (a) { return document.getElementById(a.getAttribute("href").slice(1)); })
+      .filter(Boolean);
+    var byId = {};
+    links.forEach(function (a) { byId[a.getAttribute("href").slice(1)] = a; });
+
+    var navIo = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          var link = byId[entry.target.id];
+          if (!link) return;
+          if (entry.isIntersecting) {
+            links.forEach(function (a) { a.classList.remove("active"); });
+            link.classList.add("active");
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
+    );
+    sections.forEach(function (s) { navIo.observe(s); });
+  })();
+
+  // decorative motion — skipped entirely under prefers-reduced-motion
+  (function () {
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    Array.prototype.slice.call(document.querySelectorAll(".bar-fill[data-pct]")).forEach(function (bar) {
+      bar.style.width = "0";
+    });
+
+    function prep(selector, options) {
+      options = options || {};
+      var els = Array.prototype.slice.call(document.querySelectorAll(selector));
+      var byParent = new Map();
+      els.forEach(function (el) {
+        el.classList.add("reveal");
+        var parent = el.parentElement;
+        var idx = byParent.has(parent) ? byParent.get(parent) : 0;
+        var dir = options.alternate ? (idx % 2 === 0 ? "from-left" : "from-right") : options.dirClass;
+        if (dir) el.classList.add(dir);
+        el.style.transitionDelay = Math.min(idx * 90, 360) + "ms";
+        byParent.set(parent, idx + 1);
+      });
+      return els;
+    }
+
+    function animateCount(el) {
+      var target = parseInt(el.getAttribute("data-value"), 10);
+      var suffix = el.getAttribute("data-suffix") || "";
+      if (isNaN(target)) return;
+      var start = performance.now();
+      var duration = 900;
+      function step(now) {
+        var p = Math.min((now - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function animateBars(group) {
+      var bar = group.querySelector(".bar-fill");
+      if (!bar) return;
+      var pct = bar.getAttribute("data-pct");
+      if (!pct) return;
+      requestAnimationFrame(function () { bar.style.width = pct + "%"; });
+    }
+
+    function bootTerminal(terminal) {
+      var lines = Array.prototype.slice.call(terminal.querySelectorAll(".term-line"));
+      lines.forEach(function (line) { line.classList.add("pending"); });
+      requestAnimationFrame(function () {
+        lines.forEach(function (line, i) {
+          setTimeout(function () { line.classList.add("visible"); }, i * 130);
+        });
+      });
+    }
+
+    function typeText(el) {
+      var full = el.textContent;
+      el.textContent = "";
+      var i = 0;
+      (function step() {
+        el.textContent = full.slice(0, i);
+        i++;
+        if (i <= full.length) setTimeout(step, 42);
+      })();
+    }
+
+    var typedEl = document.querySelector(".hero .role .typed");
+    if (typedEl) setTimeout(function () { typeText(typedEl); }, 300);
+
+    var targets = []
+      .concat(prep(".hero-text", { dirClass: "from-left" }))
+      .concat(prep(".avatar-frame", { dirClass: "from-right" }))
+      .concat(prep(".hero-stats"))
+      .concat(prep(".suite", { alternate: true }))
+      .concat(prep(".assertion-group"))
+      .concat(prep(".commit", { alternate: true }))
+      .concat(prep(".case", { alternate: true }))
+      .concat(prep(".cert"))
+      .concat(prep(".terminal"));
+
+    var io = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            io.unobserve(entry.target);
+
+            if (entry.target.classList.contains("hero-stats")) {
+              entry.target.querySelectorAll(".num").forEach(animateCount);
+            }
+            if (entry.target.classList.contains("assertion-group")) {
+              animateBars(entry.target);
+            }
+            if (entry.target.classList.contains("terminal")) {
+              bootTerminal(entry.target);
+            }
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" }
+    );
+
+    targets.forEach(function (el) { io.observe(el); });
+  })();
+</script>
+</body>
+</html>
