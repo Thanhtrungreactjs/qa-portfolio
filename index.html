@@ -80,6 +80,44 @@
     padding: 0 24px;
   }
 
+  /* ---------- side margin decoration ---------- */
+  .side-deco {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 36px;
+    padding: 40px 20px;
+    pointer-events: none;
+    z-index: 1;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+  }
+  .side-deco.left { left: 0; align-items: flex-end; text-align: right; }
+  .side-deco.right { right: 0; align-items: flex-start; text-align: left; }
+  .side-deco span {
+    display: block;
+    color: var(--ink-faint);
+    opacity: 0.4;
+    animation: deco-float 8s ease-in-out infinite;
+  }
+  .side-deco span.accent { color: var(--accent); opacity: 0.32; }
+  .side-deco span:nth-child(2n) { animation-delay: -2.6s; }
+  .side-deco span:nth-child(3n) { animation-delay: -5.2s; }
+  @keyframes deco-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-9px); }
+  }
+  @media (max-width: 1360px) {
+    .side-deco { display: none; }
+  }
+
   /* ---------- scroll progress ---------- */
   #scroll-progress {
     position: fixed;
@@ -633,11 +671,19 @@
     will-change: opacity, transform;
   }
   .reveal.from-left,
-  .reveal.from-right {
+  .reveal.from-right,
+  .reveal.from-top-left,
+  .reveal.from-bottom-right,
+  .reveal.from-top-right,
+  .reveal.from-bottom-left {
     transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .reveal.from-left { transform: translateX(-46px); }
   .reveal.from-right { transform: translateX(46px); }
+  .reveal.from-top-left { transform: translate(-42px, -34px); }
+  .reveal.from-bottom-right { transform: translate(42px, 34px); }
+  .reveal.from-top-right { transform: translate(42px, -34px); }
+  .reveal.from-bottom-left { transform: translate(-42px, 34px); }
   .reveal.visible { opacity: 1; transform: none; }
 </style>
 </head>
@@ -654,6 +700,26 @@
   <a href="#projects" data-label="Dự án"></a>
   <a href="#contact" data-label="Liên hệ"></a>
 </nav>
+
+<div class="side-deco left" aria-hidden="true">
+  <span>it('should pass')</span>
+  <span class="accent">✓ 128 tests passed</span>
+  <span>SELECT * FROM qa</span>
+  <span>assert(actual, expected)</span>
+  <span class="accent">&lt;TestCase id="041"/&gt;</span>
+  <span>01001011 01010101</span>
+  <span>git commit -m "fix"</span>
+</div>
+
+<div class="side-deco right" aria-hidden="true">
+  <span>expect(bug).toBe(null)</span>
+  <span class="accent">POST /api/login → 200</span>
+  <span>// TODO: retest edge case</span>
+  <span>try { } catch (e) {}</span>
+  <span class="accent">✓ regression: clear</span>
+  <span>PRAGMA integrity_check</span>
+  <span>QA_ENV=staging</span>
+</div>
 
 <div class="runbar">
   <div class="runbar-inner mono">
@@ -723,7 +789,9 @@
     </p>
     <p class="prose">
       Mục tiêu của tôi trong năm tới là trở thành Senior Tester — củng cố nền tảng manual và API testing đã
-      có, đồng thời phát triển thêm Performance Testing và Automation Testing.
+      có, đồng thời phát triển thêm Performance Testing và Automation Testing. Tôi cũng chủ động đưa AI
+      (ChatGPT/Claude, GitHub Copilot) vào quy trình làm việc hàng ngày để tăng tốc viết test case, truy vấn
+      dữ liệu và phân tích log lỗi.
     </p>
   </section>
 
@@ -778,6 +846,18 @@
     </div>
 
     <div class="assertion-group">
+      <div class="g-head"><span class="g-title">Ứng dụng AI trong kiểm thử</span><span class="g-pct">75%</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:75%" data-pct="75"></div></div>
+      <div class="tag-row">
+        <span class="tag">ChatGPT / Claude — sinh test case</span>
+        <span class="tag">GitHub Copilot</span>
+        <span class="tag">AI hỗ trợ viết SQL</span>
+        <span class="tag">Prompt engineering</span>
+        <span class="tag">AI tóm tắt log / bug report</span>
+      </div>
+    </div>
+
+    <div class="assertion-group">
       <div class="g-head"><span class="g-title">Performance &amp; Automation Testing</span><span class="g-pct">40%</span></div>
       <div class="bar-track"><div class="bar-fill pending" style="width:40%" data-pct="40"></div></div>
       <div class="tag-row">
@@ -803,6 +883,7 @@
           <li>Kiểm thử trực tiếp trên hệ cơ sở dữ liệu PostgreSQL: logic nghiệp vụ, tính toàn vẹn dữ liệu, trigger, constraint và hoạt động đọc/ghi dữ liệu; thao tác và xác thực qua pgAdmin.</li>
           <li>Song song tham gia 3 dự án lớn khác: hệ thống quản lý bệnh viện thú y (HMS &amp; CRM), phần mềm quản lý chuỗi cung ứng Long Hải (SCM), và ứng dụng quản lý nhà thuốc Pharmago (đạt giải Sao Khuê 2025).</li>
           <li>Thiết kế test case, test plan, checklist; kiểm thử API bằng Postman &amp; Swagger, phối hợp theo mô hình Agile-Scrum.</li>
+          <li>Ứng dụng AI (ChatGPT/Claude, GitHub Copilot) để sinh nhanh bộ test case từ tài liệu nghiệp vụ, hỗ trợ viết truy vấn SQL phức tạp và tóm tắt log lỗi, rút ngắn đáng kể thời gian chuẩn bị kiểm thử.</li>
         </ul>
       </div>
     </div>
@@ -993,7 +1074,7 @@
         el.classList.add("reveal");
         var parent = el.parentElement;
         var idx = byParent.has(parent) ? byParent.get(parent) : 0;
-        var dir = options.alternate ? (idx % 2 === 0 ? "from-left" : "from-right") : options.dirClass;
+        var dir = options.alternate ? (idx % 2 === 0 ? "from-top-left" : "from-bottom-right") : options.dirClass;
         if (dir) el.classList.add(dir);
         el.style.transitionDelay = Math.min(idx * 90, 360) + "ms";
         byParent.set(parent, idx + 1);
@@ -1049,14 +1130,14 @@
     if (typedEl) setTimeout(function () { typeText(typedEl); }, 300);
 
     var targets = []
-      .concat(prep(".hero-text", { dirClass: "from-left" }))
-      .concat(prep(".avatar-frame", { dirClass: "from-right" }))
+      .concat(prep(".hero-text", { dirClass: "from-top-left" }))
+      .concat(prep(".avatar-frame", { dirClass: "from-bottom-right" }))
       .concat(prep(".hero-stats"))
       .concat(prep(".suite", { alternate: true }))
-      .concat(prep(".assertion-group"))
+      .concat(prep(".assertion-group", { alternate: true }))
       .concat(prep(".commit", { alternate: true }))
       .concat(prep(".case", { alternate: true }))
-      .concat(prep(".cert"))
+      .concat(prep(".cert", { alternate: true }))
       .concat(prep(".terminal"));
 
     var io = new IntersectionObserver(
