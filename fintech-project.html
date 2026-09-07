@@ -210,16 +210,16 @@
     <p class="kicker mono">PRJ-01 · case study chi tiết</p>
     <h1>Hệ thống Fintech nội bộ</h1>
     <p class="subtitle">
-      Nền tảng fintech phục vụ nội bộ công ty, gồm hai mô-đun chính: <b>ví điện tử</b> (thanh toán, chuyển
-      khoản nội bộ) và <b>cho vay ngang hàng — P2P Lending</b> (chấm điểm tín dụng, giải ngân, quản lý khoản
-      vay). Đây là dự án đầu tiên tôi đảm nhiệm vai trò QA chính — một mình phụ trách toàn bộ vòng đời kiểm
-      thử, từ thiết kế test case đến khi tính năng lên production.
+      Nền tảng fintech phục vụ nội bộ công ty, gồm năm mô-đun: <b>ví điện tử</b> (Payments), <b>cho vay
+      ngang hàng</b> (P2P Lending), <b>bảo hiểm</b> (Insurtech), <b>ngân hàng số</b> (Digital Banking) và
+      <b>quản lý tài chính doanh nghiệp</b>. Đây là dự án đầu tiên tôi đảm nhiệm vai trò QA chính — một
+      mình phụ trách toàn bộ vòng đời kiểm thử, từ thiết kế test case đến khi tính năng lên production.
     </p>
     <div class="meta-row">
       <span class="meta-chip">Thời gian: <b>08/2025 – hiện nay</b></span>
       <span class="meta-chip">Vai trò: <b>QA chính (duy nhất)</b></span>
       <span class="meta-chip">Công ty: <b>IDT Inc</b></span>
-      <span class="meta-chip">Nhóm mảng: <b>Payments · Lending</b></span>
+      <span class="meta-chip">Nhóm mảng: <b>Payments · Lending · Insurtech · Digital Banking · Enterprise Finance</b></span>
     </div>
   </header>
 
@@ -231,9 +231,10 @@
     <p>
       Fintech là nhóm dự án ứng dụng công nghệ để cung cấp hoặc cải thiện dịch vụ tài chính — có thể xoay
       quanh thanh toán, ngân hàng số, cho vay, đầu tư, bảo hiểm, blockchain, hoặc quản lý tài chính doanh
-      nghiệp. Hệ thống nội bộ tôi phụ trách tập trung vào hai mảng gần nhau nhất trong nhóm này:
-      <b>Payments</b> và <b>Lending</b> — vì cả hai đều cần một lõi xử lý số dư/giao dịch chính xác tuyệt
-      đối làm nền tảng.
+      nghiệp. Hệ thống nội bộ tôi phụ trách gộp chung năm mảng gần nhau nhất trong nhóm này —
+      <b>Payments</b>, <b>Lending</b>, <b>Insurtech</b>, <b>Digital Banking</b> và <b>quản lý tài chính
+      doanh nghiệp</b> — vì cả năm đều dùng chung một lõi xử lý số dư/giao dịch chính xác tuyệt đối làm
+      nền tảng, nên phát triển tập trung trên một hệ thống là hợp lý về mặt kỹ thuật thay vì tách rời.
     </p>
     <p>
       Vì là hệ thống dùng nội bộ (không phải sản phẩm thương mại phát hành ra ngoài), phạm vi tuân thủ quy
@@ -246,7 +247,7 @@
   <section class="block">
     <div class="block-head">
       <span class="tag-num mono">02</span>
-      <h2>Hai mô-đun nghiệp vụ</h2>
+      <h2>Năm mô-đun nghiệp vụ</h2>
     </div>
 
     <div class="module-card">
@@ -268,6 +269,36 @@
         <li>Giải ngân, sinh lịch trả nợ (gốc, lãi theo kỳ), theo dõi trạng thái quá hạn và tính phạt trễ hạn.</li>
       </ul>
     </div>
+
+    <div class="module-card">
+      <h3><span class="icon">🛡</span> Mô-đun Bảo hiểm (Insurtech)</h3>
+      <ul>
+        <li>Đăng ký mua gói bảo hiểm online — chọn gói, khai báo thông tin liên quan đến đối tượng được bảo hiểm.</li>
+        <li>Tính phí bảo hiểm (premium) tự động dựa trên dữ liệu hành vi/lịch sử sẵn có trong hệ thống, tương tự cách engine chấm điểm tín dụng hoạt động ở mô-đun vay.</li>
+        <li>Quản lý hợp đồng — theo dõi hiệu lực, nhắc gia hạn, xử lý huỷ hợp đồng giữa kỳ.</li>
+        <li>Xử lý yêu cầu bồi thường (claim) — nộp hồ sơ, xét duyệt theo điều khoản hợp đồng, giải ngân bồi thường.</li>
+      </ul>
+    </div>
+
+    <div class="module-card">
+      <h3><span class="icon">🏦</span> Mô-đun Ngân hàng số (Digital Banking)</h3>
+      <ul>
+        <li>Mở tài khoản online (eKYC) — không cần đến chi nhánh vật lý, xác minh danh tính từ xa.</li>
+        <li>Trang tổng quan tài khoản — tổng hợp số dư, giao dịch từ ví điện tử, khoản vay và hợp đồng bảo hiểm về một nơi duy nhất.</li>
+        <li>Công cụ quản lý tài chính cá nhân — phân loại chi tiêu theo danh mục, đặt hạn mức ngân sách, cảnh báo chi tiêu vượt mức.</li>
+        <li>Đóng vai trò lớp truy cập hợp nhất phía trên các mô-đun ví, vay và bảo hiểm.</li>
+      </ul>
+    </div>
+
+    <div class="module-card">
+      <h3><span class="icon">🧾</span> Mô-đun Quản lý tài chính doanh nghiệp</h3>
+      <ul>
+        <li>Kế toán tự động — ghi nhận thu/chi từ các mô-đun khác, đối chiếu sổ sách định kỳ.</li>
+        <li>Quản lý dòng tiền (cash flow) nội bộ — dự báo thanh khoản theo lịch giải ngân/thu nợ/thu phí bảo hiểm.</li>
+        <li>Hoá đơn điện tử — phát hành, gửi và theo dõi trạng thái thanh toán hoá đơn.</li>
+        <li>Báo cáo tài chính định kỳ tự động, tổng hợp số liệu từ cả bốn mô-đun còn lại.</li>
+      </ul>
+    </div>
   </section>
 
   <section class="block">
@@ -286,8 +317,8 @@
 
       <div class="concern">
         <div class="c-head"><span class="c-num">2</span><h3>Tuân thủ quy định — KYC/AML cơ bản</h3></div>
-        <p>Mô-đun vay bắt buộc xác minh danh tính trước khi giải ngân; đây là điều kiện tiên quyết trong mọi hệ thống lending, kể cả quy mô nội bộ.</p>
-        <div class="qa-scope"><b>Phạm vi kiểm thử:</b> kiểm thử luồng xác minh giấy tờ/thông tin thu nhập, kiểm thử chặn hồ sơ vay khi thiếu bước KYC, kiểm thử log lại lịch sử phê duyệt để phục vụ đối soát sau này.</div>
+        <p>Mô-đun vay bắt buộc xác minh danh tính trước khi giải ngân; mô-đun bảo hiểm cũng cần xác minh thông tin đối tượng được bảo hiểm trước khi duyệt hợp đồng và khi xét hồ sơ bồi thường — đây là điều kiện tiên quyết trong cả lending lẫn insurtech, kể cả quy mô nội bộ.</p>
+        <div class="qa-scope"><b>Phạm vi kiểm thử:</b> kiểm thử luồng xác minh giấy tờ/thông tin thu nhập, kiểm thử chặn hồ sơ vay hoặc hồ sơ bồi thường khi thiếu bước xác minh, kiểm thử log lại lịch sử phê duyệt để phục vụ đối soát sau này.</div>
       </div>
 
       <div class="concern">
@@ -349,7 +380,7 @@
     </div>
     <div class="impact-box">
       <div class="label mono">VAI TRÒ</div>
-      <p>QA chính — đầu mối kiểm thử duy nhất cho toàn bộ dự án, không có QA thứ hai hỗ trợ. Tự xây dựng quy trình kiểm thử, tự ưu tiên rủi ro, tự thiết kế test case cho cả hai mô-đun ví điện tử và cho vay ngang hàng, từ giai đoạn đầu đến khi tính năng lên production.</p>
+      <p>QA chính — đầu mối kiểm thử duy nhất cho toàn bộ dự án, không có QA thứ hai hỗ trợ. Tự xây dựng quy trình kiểm thử, tự ưu tiên rủi ro, tự thiết kế test case cho cả năm mô-đun (ví điện tử, cho vay ngang hàng, bảo hiểm, ngân hàng số, quản lý tài chính doanh nghiệp), từ giai đoạn đầu đến khi tính năng lên production.</p>
     </div>
     <div class="disclosure">
       Ghi chú: đây là hệ thống dùng nội bộ công ty, không phải sản phẩm phát hành thương mại ra bên ngoài —
