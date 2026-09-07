@@ -939,11 +939,11 @@
         <span class="status-pill pass"><span class="dot"></span>QA chính</span>
       </div>
       <div class="case-grid">
-        <div><div class="step-label">Mô tả</div><p>Hệ thống fintech phục vụ nội bộ công ty, xử lý các luồng giao dịch và số liệu tài chính — đòi hỏi độ chính xác cao ở tầng dữ liệu.</p></div>
-        <div><div class="step-label">Trách nhiệm</div><p>Là QA duy nhất phụ trách dự án nên chủ động xây dựng toàn bộ quy trình kiểm thử: thiết kế test case cho các luồng giao dịch, đối soát số dư, kiểm tra tính toàn vẹn dữ liệu tài chính trên PostgreSQL (trigger, constraint, làm tròn số, giao dịch trùng).</p></div>
-        <div><div class="step-label">Công cụ</div><p>PostgreSQL &amp; pgAdmin, Postman &amp; Swagger (API giao dịch), Jira.</p></div>
+        <div><div class="step-label">Mô tả</div><p>Hệ thống fintech nội bộ đóng vai trò như một sổ cái (ledger) điện tử cho công ty — quản lý số dư tài khoản, xử lý các luồng nạp, rút, chuyển khoản và đối soát giao dịch theo thời gian thực. Sai lệch dù rất nhỏ ở tầng dữ liệu cũng ảnh hưởng trực tiếp đến số liệu tài chính, nên yêu cầu độ chính xác gần như tuyệt đối.</p></div>
+        <div><div class="step-label">Trách nhiệm</div><p>Là QA duy nhất phụ trách dự án nên chủ động xây dựng toàn bộ quy trình kiểm thử từ đầu: thiết kế test case cho từng luồng nạp/rút/chuyển khoản, kiểm tra tính nhất quán số dư (nguyên tắc ACID), dò race condition khi nhiều giao dịch chạy đồng thời, kiểm thử cơ chế rollback khi giao dịch lỗi giữa chừng, và đối soát dữ liệu cuối ngày trực tiếp trên PostgreSQL (trigger, constraint, idempotency key).</p></div>
+        <div><div class="step-label">Công cụ</div><p>PostgreSQL &amp; pgAdmin (kiểm tra ledger, đối soát số liệu), Postman &amp; Swagger (API giao dịch), Jira (theo dõi lỗi), kịch bản kiểm thử concurrency thủ công.</p></div>
       </div>
-      <div class="case-impact">Vai trò: <b>QA chính (đầu mối duy nhất)</b> — chịu trách nhiệm toàn bộ quy trình kiểm thử dự án.</div>
+      <div class="case-impact">Vai trò: <b>QA chính (đầu mối duy nhất)</b> — phụ trách toàn bộ quy trình kiểm thử, từ thiết kế test case đến đối soát dữ liệu tài chính, không có QA thứ hai hỗ trợ.</div>
     </div>
 
     <div class="case">
