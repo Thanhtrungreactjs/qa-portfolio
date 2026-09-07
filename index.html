@@ -939,11 +939,11 @@
         <span class="status-pill pass"><span class="dot"></span>QA chính</span>
       </div>
       <div class="case-grid">
-        <div><div class="step-label">Mô tả</div><p>Hệ thống fintech nội bộ đóng vai trò như một sổ cái (ledger) điện tử cho công ty — quản lý số dư tài khoản, xử lý các luồng nạp, rút, chuyển khoản và đối soát giao dịch theo thời gian thực. Sai lệch dù rất nhỏ ở tầng dữ liệu cũng ảnh hưởng trực tiếp đến số liệu tài chính, nên yêu cầu độ chính xác gần như tuyệt đối.</p></div>
-        <div><div class="step-label">Trách nhiệm</div><p>Là QA duy nhất phụ trách dự án nên chủ động xây dựng toàn bộ quy trình kiểm thử từ đầu: thiết kế test case cho từng luồng nạp/rút/chuyển khoản, kiểm tra tính nhất quán số dư (nguyên tắc ACID), dò race condition khi nhiều giao dịch chạy đồng thời, kiểm thử cơ chế rollback khi giao dịch lỗi giữa chừng, và đối soát dữ liệu cuối ngày trực tiếp trên PostgreSQL (trigger, constraint, idempotency key).</p></div>
-        <div><div class="step-label">Công cụ</div><p>PostgreSQL &amp; pgAdmin (kiểm tra ledger, đối soát số liệu), Postman &amp; Swagger (API giao dịch), Jira (theo dõi lỗi), kịch bản kiểm thử concurrency thủ công.</p></div>
+        <div><div class="step-label">Mô tả</div><p>Hệ thống fintech nội bộ đa mô-đun: <b>ví điện tử</b> (quản lý số dư, nạp/rút/chuyển khoản, đối soát giao dịch theo thời gian thực) và <b>cho vay ngang hàng nội bộ</b> — P2P Lending (chấm điểm tín dụng dựa trên dữ liệu thay thế, phê duyệt khoản vay, giải ngân, theo dõi lịch trả nợ). Sai lệch dù rất nhỏ ở tầng dữ liệu đều ảnh hưởng trực tiếp đến số liệu tài chính, nên yêu cầu độ chính xác gần như tuyệt đối.</p></div>
+        <div><div class="step-label">Trách nhiệm</div><p>Là QA duy nhất phụ trách dự án nên chủ động xây dựng toàn bộ quy trình kiểm thử từ đầu — mô-đun ví: kiểm tra tính nhất quán số dư (nguyên tắc ACID), dò race condition khi nhiều giao dịch chạy đồng thời, kiểm thử rollback khi giao dịch lỗi giữa chừng; mô-đun vay P2P: kiểm thử luồng đăng ký vay, xác minh KYC cơ bản, engine chấm điểm tín dụng, giải ngân và lịch trả nợ (tính lãi, xử lý trễ hạn). Đối soát dữ liệu cuối ngày trực tiếp trên PostgreSQL (trigger, constraint, idempotency key).</p></div>
+        <div><div class="step-label">Công cụ</div><p>PostgreSQL &amp; pgAdmin (ledger, dữ liệu khoản vay), Postman &amp; Swagger (API giao dịch, API chấm điểm tín dụng), Jira, kịch bản kiểm thử concurrency thủ công.</p></div>
       </div>
-      <div class="case-impact">Vai trò: <b>QA chính (đầu mối duy nhất)</b> — phụ trách toàn bộ quy trình kiểm thử, từ thiết kế test case đến đối soát dữ liệu tài chính, không có QA thứ hai hỗ trợ.</div>
+      <div class="case-impact">Vai trò: <b>QA chính (đầu mối duy nhất)</b> — phụ trách toàn bộ quy trình kiểm thử cho cả mô-đun ví điện tử lẫn cho vay ngang hàng, không có QA thứ hai hỗ trợ.</div>
     </div>
 
     <div class="case">
