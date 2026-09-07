@@ -556,6 +556,19 @@
     color: var(--ink);
   }
   .case-impact b { color: var(--pass); font-family: "JetBrains Mono", monospace; }
+  .case-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    transition: border-color .15s ease, gap .15s ease;
+  }
+  .case-more:hover { gap: 9px; border-color: var(--accent); }
 
   /* ---------- certifications ---------- */
   .cert-row {
@@ -944,6 +957,7 @@
         <div><div class="step-label">Công cụ</div><p>PostgreSQL &amp; pgAdmin (ledger, dữ liệu khoản vay), Postman &amp; Swagger (API giao dịch, API chấm điểm tín dụng), Jira, kịch bản kiểm thử concurrency thủ công.</p></div>
       </div>
       <div class="case-impact">Vai trò: <b>QA chính (đầu mối duy nhất)</b> — phụ trách toàn bộ quy trình kiểm thử cho cả mô-đun ví điện tử lẫn cho vay ngang hàng, không có QA thứ hai hỗ trợ.</div>
+      <a class="case-more" href="fintech-project.html">Xem chi tiết case study dự án →</a>
     </div>
 
     <div class="case">
